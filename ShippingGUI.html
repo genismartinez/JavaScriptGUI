@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shipping Cost Calculator</title>
+  <style>
+    /* CSS styles */
+    /* Set the font family and background color for the body */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Style the container for the calculator */
+    .container {
+      max-width: 400px;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Center the heading */
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    /* Add margin to form groups */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    /* Style the label for inputs */
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    /* Style the number inputs */
+    .form-group input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    /* Style the calculate button */
+    .form-group button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    /* Add hover effect to the calculate button */
+    .form-group button:hover {
+      background-color: #45a049;
+    }
+
+    /* Style the result container */
+    .result {
+      margin-top: 20px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Add margin to result paragraphs */
+    .result p {
+      margin-bottom: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Shipping Cost Calculator</h1>
+    <div class="form-group">
+      <label for="laptop">Laptop:</label>
+      <input type="number" id="laptop" value="0">
+    </div>
+    <div class="form-group">
+      <label for="mouse">Mouse:</label>
+      <input type="number" id="mouse" value="0">
+    </div>
+    <div class="form-group">
+      <label for="desktop">Desktop:</label>
+      <input type="number" id="desktop" value="0">
+    </div>
+    <div class="form-group">
+      <label for="lcd-screens">LCD Screens:</label>
+      <input type="number" id="lcd-screens" value="0">
+    </div>
+    <div class="form-group">
+      <button onclick="calculateShipping()">Calculate Shipping</button>
+    </div>
+
+    <div class="result">
+      <h2>Result</h2>
+      <p id="result">Shipping Cost: 0 Euro<br>Total Volume: 0 cm^3<br>Total Weight: 0 kg</p>
+    </div>
+  </div>
+
+  <script>
+    // Function to calculate the shipping cost
+    function calculateShipping() {
+      // Get the input values
+      const laptopQty = parseInt(document.getElementById('laptop').value);
+      const mouseQty = parseInt(document.getElementById('mouse').value);
+      const desktopQty = parseInt(document.getElementById('desktop').value);
+      const lcdScreensQty = parseInt(document.getElementById('lcd-screens').value);
+
+      // Create item objects
+      const laptop = { name: 'Laptop', boxSize: '60x50x50', weight: 6.5 };
+      const mouse = { name: 'Mouse', boxSize: '30x30x20', weight: 0.2 };
+      const desktop = { name: 'Desktop', boxSize: '100x150x50', weight: 20 };
+      const lcdScreens = { name: 'LCD Screens', boxSize: '120x140x80', weight: 2.6 };
+
+      // Calculate the total volume and weight
+      const totalVolume = (laptopQty * calculateVolume(laptop.boxSize)) + (mouseQty * calculateVolume(mouse.boxSize)) + (desktopQty * calculateVolume(desktop.boxSize)) + (lcdScreensQty * calculateVolume(lcdScreens.boxSize));
+      const totalWeight = (laptopQty * laptop.weight) + (mouseQty * mouse.weight) + (desktopQty * desktop.weight) + (lcdScreensQty * lcdScreens.weight);
+
+      // Calculate the shipping cost
+      let shippingCost = 0;
+
+      if (totalWeight <= 500) {
+        shippingCost = 1000;
+      } else {
+        const numBigContainers = Math.ceil(totalWeight / 500);
+        shippingCost = numBigContainers * 1800;
+      }
+
+      // Display the result
+      const resultElement = document.getElementById('result');
+      resultElement.innerText = `Shipping Cost: ${shippingCost} Euro\nTotal Volume: ${totalVolume} cm^3\nTotal Weight: ${totalWeight} kg`;
+    }
+
+    // Function to calculate the volume based on box dimensions
+    function calculateVolume(boxSize) {
+      const dimensions = boxSize.split('x').map(Number);
+      const volume = dimensions.reduce((acc, val) => acc * val, 1);
+      return volume;
+    }
+  </script>
+</body>
+</html>
